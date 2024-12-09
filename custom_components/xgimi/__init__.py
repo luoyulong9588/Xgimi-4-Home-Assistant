@@ -19,11 +19,13 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     config = {}
     for k in [CONF_HOST, CONF_TOKEN, CONF_NAME]:
         config[k] = config_entry.data.get(k)
-
+    entity_id = config_entry.data.get("entity_id")
+    if not entity_id:
+        hass.logger.warning("Entity ID is not configured.")
+    else:
+        config["entity_id"] = entity_id
     hass.data[DOMAIN][config_entry.entry_id] = config
-
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
-
     return True
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:

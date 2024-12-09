@@ -4,11 +4,15 @@
   "version": "v0.0.7",
   "config_flow": true,
   "integration_type": "device",
-  "documentation": "https://github.com/manymuch/Xgimi-4-Home-Assistant",
-  "issue_tracker": "https://github.com/manymuch/Xgimi-4-Home-Assistant/issues",
-  "requirements": ["asyncudp", "bluez-peripheral"],
+  "documentation": "https://github.com/luoyulong9588/Xgimi-4-Home-Assistant",
+  "issue_tracker": "https://github.com/luoyulong9588/Xgimi-4-Home-Assistant/issues",
+  "requirements": [
+    "asyncudp",
+    "bluez-peripheral"
+  ],
   "codeowners": [
-    "@manymuch"
+    "@manymuch",
+    "@Normalin."
   ],
   "iot_class": "local_polling"
 }

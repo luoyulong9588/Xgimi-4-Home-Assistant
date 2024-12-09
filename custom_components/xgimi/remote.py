@@ -15,18 +15,21 @@ from homeassistant.components.remote import (
 from .const import DOMAIN
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the Xiaomi TV platform."""
+custom_hass = None
 
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    """Set up the GiMi platform."""
+    custom_hass = hass
     # If a hostname is set. Discovery is skipped.
     host = config.get(CONF_HOST)
     name = config.get(CONF_NAME)
     token = config.get(CONF_TOKEN)
+    entity_id = config.get(CONF_ENTITY)
     unique_id = f"{name}-{token}"
 
     xgimi_api = XgimiApi(ip=host, command_port=16735, advance_port=16750, alive_port=554,
-                         manufacturer_data=token)
-    async_add_entities([XgimiRemote(xgimi_api, name, unique_id)])
+                         manufacturer_data=token, custom_entity = entity_id)
+    async_add_entities([XgimiRemote(xgimi_api, name, unique_id,hass)])
 
 
 async def async_setup_entry(
@@ -38,24 +41,26 @@ async def async_setup_entry(
     host = config[CONF_HOST]
     name = config[CONF_NAME]
     token = config[CONF_TOKEN]
+    entity_id = config.get("entity_id")
 
     unique_id = config_entry.unique_id
     assert unique_id is not None
 
     xgimi_api = XgimiApi(ip=host, command_port=16735, advance_port=16750, alive_port=554,
-                         manufacturer_data=token)
-    async_add_entities([XgimiRemote(xgimi_api, name, unique_id)])
+                         manufacturer_data=token,custom_entity = entity_id)
+    async_add_entities([XgimiRemote(xgimi_api, name, unique_id, hass)])
 
 
 class XgimiRemote(RemoteEntity):
     """An entity for Xgimi Projector
     """
 
-    def __init__(self, xgimi_api, name, unique_id):
+    def __init__(self, xgimi_api, name, unique_id, hass):
         self.xgimi_api = xgimi_api
         self._name = name
         self._icon = "mdi:projector"
         self._unique_id = unique_id
+        self.hass = hass
 
     async def async_update(self):
         """Retrieve latest state."""
@@ -84,14 +89,14 @@ class XgimiRemote(RemoteEntity):
     async def async_turn_on(self, **kwargs):
         """Turn the Xgimi Projector On."""
         # Do the turning on.
-        await self.xgimi_api.async_send_command("poweron")
+        await self.xgimi_api.async_send_command("poweron",self.hass)
 
     async def async_turn_off(self, **kwargs):
         """Turn the Xgimi Projector Off."""
         # Do the turning off.
-        await self.xgimi_api.async_send_command("poweroff")
+        await self.xgimi_api.async_send_command("poweroff",self.hass)
 
     async def async_send_command(self, command: Iterable[str], **kwargs) -> None:
         """Send a command to one of the devices."""
         for single_command in command:
-            await self.xgimi_api.async_send_command(single_command)
+            await self.xgimi_api.async_send_command(single_command,self.hass)

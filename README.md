@@ -1,3 +1,9 @@
+
+fork自  https://github.com/manymuch/Xgimi-4-Home-Assistant/
+
+在原代码基础上，配置时添加了一个可选的开机按键选项，配置了该按键则可以通过hass服务控制远程蓝牙（hass主机距离投影仪太远，使用ESP32 发送蓝牙广播唤醒设备），不配置entity_id的情况下，功能同源代码。
+
+
 # Xgimi-4-Home-Assistant
 <img src="https://brands.home-assistant.io/xgimi/logo.png"  width="360" height="120">  
 
@@ -65,7 +71,9 @@ Either with android app or with linux bluetoothctl, you should now able to power
         name: Z6X
         host: 192.168.0.115
         token: "12D7C7899B9F80FFFFFF3043524B544D"
+        entity_id: "button.esp32_bluetooth_proxy_ble_wake_xgimi_projector_wakeup"
     ```
+4. The entity_id is an optional input configuration. If your host is far away from the XGIMI device, you need BLE remote wakeup functionality.
 
 #### Method B: UI setup
 1. Make sure your projector is **powered on** and connected to the same network as home assistant
@@ -75,7 +83,9 @@ Either with android app or with linux bluetoothctl, you should now able to power
     name: z6x
     host: 192.168.0.115
     token: 12D7C7899B9F80FFFFFF3043524B544D
+    entity_id: "button.esp32_bluetooth_proxy_ble_wake_xgimi_projector_wakeup"
     ```
+4. The entity_id is an optional input configuration. If your host is far away from the XGIMI device, you need BLE remote wakeup functionality.
 
 ## 📺How to use
 The integration setup up a remote entity: e.g. `remote.z6x`.  

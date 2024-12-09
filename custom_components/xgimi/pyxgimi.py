@@ -6,12 +6,13 @@ from time import time
 
 
 class XgimiApi:
-    def __init__(self, ip, command_port, advance_port, alive_port, manufacturer_data) -> None:
+    def __init__(self, ip, command_port, advance_port, alive_port, manufacturer_data,custom_entity) -> None:
         self.ip = ip
         self.command_port = command_port  # 16735
         self.advance_port = advance_port  # 16750
         self.alive_port = alive_port  # 554
         self.manufacturer_data = manufacturer_data
+        self.entity_id = custom_entity
         self._is_on = False
         self.last_on = time()
         self.last_off = time()
@@ -92,7 +93,20 @@ class XgimiApi:
             await self.async_ble_power_on(manufacturer_data, company_id, service_uuid)
             await asyncio.sleep(1)
 
-    async def async_send_command(self, command) -> None:
+    async def async_remote_ble_power_on(self,  hass, button_entity_id):
+        if not hass:
+            raise ValueError("HomeAssistant instance is required.")
+        try:
+            await hass.services.async_call(
+                domain="button",
+                service="press",
+                service_data={"entity_id": button_entity_id},  #
+                blocking=True,
+            )
+        except Exception as e:
+            raise RuntimeError(f"Failed to call button.click service: {e}")
+
+    async def async_send_command(self, command,hass = None) -> None:
         """Send a command to a device."""
         if command in self._command_dict:
             if command == "poweroff":
@@ -106,7 +120,10 @@ class XgimiApi:
         elif command == "poweron":
             self._is_on = True
             self.last_on = time()
-            await self.async_robust_ble_power_on(self.manufacturer_data)
+            if not self.entity_id:
+                await self.async_robust_ble_power_on(self.manufacturer_data)
+            else:
+                await self.async_remote_ble_power_on(hass,self.entity_id)
         else:
             msg = self._advance_command.replace("command_holder", command)
             remote_addr = (self.ip, self.advance_port)

@@ -7,7 +7,8 @@
         "data": {
           "name": "电视名称",
           "host": "电视 IP",
-          "token": "蓝牙 Token"
+          "token": "蓝牙 Token",
+          "entity_id": "蓝牙广播开机 Button"
         }
       }
     },

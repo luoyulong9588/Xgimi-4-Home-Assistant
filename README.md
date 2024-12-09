@@ -79,7 +79,7 @@ Either with android app or with linux bluetoothctl, you should now able to power
 1. Make sure your projector is **powered on** and connected to the same network as home assistant
 2. Add new integration, search for xgimi
 3. Enter your projector information, for example:
-4. <img src="assets/tv_card.png"  width="200" height="220"> 
+4. <img src="assets/add_button.png"  width="300" height="320"> 
 
     ```bash
     name: z6x

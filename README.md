@@ -79,13 +79,15 @@ Either with android app or with linux bluetoothctl, you should now able to power
 1. Make sure your projector is **powered on** and connected to the same network as home assistant
 2. Add new integration, search for xgimi
 3. Enter your projector information, for example:
+4. <img src="assets/tv_card.png"  width="200" height="220"> 
+
     ```bash
     name: z6x
     host: 192.168.0.115
     token: 12D7C7899B9F80FFFFFF3043524B544D
     entity_id: "button.esp32_bluetooth_proxy_ble_wake_xgimi_projector_wakeup"
     ```
-4. The entity_id is an optional input configuration. If your host is far away from the XGIMI device, you need BLE remote wakeup functionality.
+5. The entity_id is an optional input configuration. If your host is far away from the XGIMI device, you need BLE remote wakeup functionality.
 
 ## 📺How to use
 The integration setup up a remote entity: e.g. `remote.z6x`.  
